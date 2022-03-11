@@ -4,59 +4,62 @@
  * @author meritxellfont
  */
 public class Line {
-    private int cursor;
-    private StringBuilder stringLine;
-    private boolean insert;
+        private int pos;
+    private StringBuilder linia;
+    private boolean ins;
 
     public Line() {
-        this.stringLine = new StringBuilder();
+        this.linia = new StringBuilder();
     }
-    
-    public void addChar(char c){
-        this.stringLine.insert(this.cursor,c);
-        this.cursor++;            
+
+    public void end() {
+        this.pos = this.linia.length();
     }
-    public void home(){
-        this.cursor=0;
-    }
-    public void end(){
-        this.cursor=this.stringLine.length();
-    }
-    public void delete(){
-        if(this.cursor < this.stringLine.length()-2){//mirar a veure si hi ha prous caracters per esborrar
-            this.stringLine.deleteCharAt(this.cursor);
+
+    public void delete() {
+        if (this.pos < this.linia.length() - 2) {//mirar a veure si hi ha prous caracters per esborrar
+            this.linia.deleteCharAt(this.pos);
         }
     }
-    public void moveCursor(int move){
-        if(this.cursor + move >= 0 && cursor + move <=this.stringLine.length()){
-            this.cursor+=move;
-        }        
+
+    public void addChar(char c) {
+        this.linia.insert(this.pos, c);
+        this.pos++;
     }
-    public void backspace(){
-        if(cursor != 0){
-            this.stringLine.deleteCharAt(this.cursor-1);
-            this.cursor--;
+
+    public void home() {
+        this.pos = 0;
+    }
+
+    public void backspace() {
+        if (pos != 0) {
+            this.linia.deleteCharAt(this.pos - 1);
+            this.pos--;
         }
     }
-    public void insert(){
-        this.insert = !insert;
+
+    public void moveCursor(int move) {
+        if (this.pos + move >= 0 && pos + move <= this.linia.length()) {
+            this.pos += move;
+        }
     }
-    public String displayString(){
+
+    public void insert() {
+        this.ins = !ins;
+    }
+
+    public String displayString() {
         StringBuilder disp = new StringBuilder();
         disp.append('\r');
-        disp.append(this.stringLine.toString());
+        disp.append(this.linia.toString());
         disp.append(" ");
         disp.append("\033[");//serveix per moure el cursor?
-        disp.append(1+this.stringLine.length());
+        disp.append(1 + this.linia.length());
         disp.append("D");
         return disp.toString();
     }
-    public String toString(){
-        return this.stringLine.toString();
-    }
 
-    
-    
-    
-    
+    public String toString() {
+        return this.linia.toString();
+    }    
 }
