@@ -43,10 +43,10 @@ public class EditableBufferedReader extends BufferedReader {
     @Override
     public int read() throws IOException {
         while (true) {
-            int command = super.read();
-            switch (command) {
-                case 72:
-                    this.line.home();
+            int tecla = super.read();
+            switch (tecla) {
+                case 127:
+                    this.line.backspace();
                     System.out.print(this.line.displayString());
                     break;
                 case 70:
@@ -57,24 +57,24 @@ public class EditableBufferedReader extends BufferedReader {
                     this.line.delete();
                     System.out.print(this.line.displayString());
                     break;
-                case 127:
+                case 65:
                     this.line.backspace();
                     System.out.print(this.line.displayString());
                     break;
-                case 65:
-                    this.line.backspace();
+                case 72:
+                    this.line.home();
                     System.out.print(this.line.displayString());
                     break;
                 case 27:
                     switch (super.read()) {
                         case 91:
                             switch (super.read()) {
-                                case 67:
-                                    this.line.moveCursor(1);
-                                    System.out.print(this.line.displayString());
-                                    break;
                                 case 68:
                                     this.line.moveCursor(-1);
+                                    System.out.print(this.line.displayString());
+                                    break;
+                                case 67:
+                                    this.line.moveCursor(1);
                                     System.out.print(this.line.displayString());
                                     break;
                             }
@@ -82,7 +82,7 @@ public class EditableBufferedReader extends BufferedReader {
                     }
                     break;
                 default:
-                    return command;
+                    return tecla;
 
             }
         }
@@ -92,14 +92,15 @@ public class EditableBufferedReader extends BufferedReader {
     @Override
     public String readLine() throws IOException {
         setRaw();
-        int inChar = 0;
-        while((inChar = read()) != 13){//si es diferent a enter
-            this.line.addChar((char) inChar);
+        int tecla = 0;
+        while ((tecla = read()) != 13) {//si es diferent a enter
+            this.line.addChar((char) tecla);
             System.out.print(this.line.displayString());
             //System.out.println(inChar);
         }
         unsetRaw();
         return this.line.toString();
     }
+
 
 }
