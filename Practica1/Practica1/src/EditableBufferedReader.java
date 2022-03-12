@@ -1,35 +1,22 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author meritxellfont
  */
 public class EditableBufferedReader extends BufferedReader {
 
-    public final static int CRTL_C = 3;
-    public final static int ENTER = 13;
-    public final static int ESC = 27;
-    public final static int INSERT = 50;
-    public final static int SUPR = 51;
-    public final static int UP = 65;
-    public final static int DOWN = 66;
-    public final static int RIGHT = 67;
-    public final static int LEFT = 68;
-    public final static int END = 70;
-    public final static int HOME = 72;
-    public final static int CLAUDATOR = 91;
-    public final static int WAVE = 126;
-    public final static int DELETE = 127;
+    private Line line;
 
-    private final Line line;
-    
     public EditableBufferedReader(Reader in) {
         super(in);
         this.line = new Line();
@@ -53,93 +40,66 @@ public class EditableBufferedReader extends BufferedReader {
         }
     }
 
-    /**
-     * llegeix el següent caràcter o la següent tecla de cursor
-     * @return 
-     */
     @Override
-    public int read() {
-        int tecla;
-        try {
-            tecla = super.read();
+    public int read() throws IOException {
+        while (true) {
+            int command = super.read();
+            switch (command) {
+                case 72:
+                    this.line.home();
+                    System.out.print(this.line.displayString());
+                    break;
+                case 70:
+                    this.line.end();
+                    System.out.print(this.line.displayString());
+                    break;
+                case 126:
+                    this.line.delete();
+                    System.out.print(this.line.displayString());
+                    break;
+                case 127:
+                    this.line.backspace();
+                    System.out.print(this.line.displayString());
+                    break;
+                case 65:
+                    this.line.backspace();
+                    System.out.print(this.line.displayString());
+                    break;
+                case 27:
+                    switch (super.read()) {
+                        case 91:
+                            switch (super.read()) {
+                                case 67:
+                                    this.line.moveCursor(1);
+                                    System.out.print(this.line.displayString());
+                                    break;
+                                case 68:
+                                    this.line.moveCursor(-1);
+                                    System.out.print(this.line.displayString());
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    return command;
 
-            if (tecla != ESC) {
-                return tecla;
-            }
-            tecla = super.read();
-            if (tecla == CLAUDATOR) {
-                tecla = super.read();
-                return (tecla * (-1));  //per distingir al mètode readLine() que aquest és un caràcter especial per fer una acció
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(EditableBufferedReader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;   //retornem un nullChar
-    }
-
-    public Line readLinea() {
-        this.setRaw();
-        int tecla = this.read();
-        while (tecla != ENTER || tecla != ESC || tecla!=CTRL_C) {
-            if (tecla > 0) {
-                //caracter "normal"
-                line.addChar((char) tecla);
-            } else if (tecla < 0) {
-                //caracter "especial"
-                tecla = tecla * (-1);
-                switch (tecla) {
-                    case INSERT:                        
-                        line.insert();
-                        break;
-                    case SUPR:
-                        line.supr();
-                        break;
-                    case UP:
-                        //line.move(-2);
-                        break;
-                    case DOWN:
-                        //line.move(2);
-                        break;
-                    case RIGHT:
-                        line.move(-1);
-                        break;
-                    case LEFT:
-                        line.move(1);
-                        break;
-                    case END:
-                        line.end();
-                        break;
-                    case HOME:
-                        line.home();
-                        break;
-                    case DELETE:
-                        line.delete();
-                        break;
-                    default:
-                    //res
-                }
-            } else {
-                //error
-                System.out.println("Error lectura, tecla == 0");
             }
         }
-        System.out.print(this.line);
-        this.unsetRaw();
-        return this.line;
+
     }
+
+    @Override
+    public String readLine() throws IOException {
+        setRaw();
+        int inChar = 0;
+        while((inChar = read()) != 13){//si es diferent a enter
+            this.line.addChar((char) inChar);
+            System.out.print(this.line.displayString());
+            //System.out.println(inChar);
+        }
+        unsetRaw();
+        return this.line.toString();
+    }
+
 }
-
-
-/**
- *   
-    public final static int INSERT = 50;
-    public final static int SUPR = 51;
-    public final static int UP = 65;
-    public final static int DOWN = 66;
-    public final static int RIGHT = 67;
-    public final static int LEFT = 68;
-    public final static int END = 70;
-    public final static int HOME = 72;
-    public final static int DELETE = 127;
- */
