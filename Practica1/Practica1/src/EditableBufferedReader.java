@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class EditableBufferedReader extends BufferedReader {
 
-    private Line line;
+        private Line line;
 
     public EditableBufferedReader(Reader in) {
         super(in);
@@ -42,17 +42,8 @@ public class EditableBufferedReader extends BufferedReader {
 
     @Override
     public int read() throws IOException {
-        while (true) {
-            int command = super.read();
-            switch (command) {
-                case 72:
-                    this.line.home();
-                    System.out.print(this.line.displayString());
-                    break;
-                case 70:
-                    this.line.end();
-                    System.out.print(this.line.displayString());
-                    break;
+            int tecla = super.read();
+            switch (tecla) {
                 case 126:
                     this.line.delete();
                     System.out.print(this.line.displayString());
@@ -61,20 +52,28 @@ public class EditableBufferedReader extends BufferedReader {
                     this.line.backspace();
                     System.out.print(this.line.displayString());
                     break;
-                case 65:
-                    this.line.backspace();
-                    System.out.print(this.line.displayString());
-                    break;
                 case 27:
                     switch (super.read()) {
                         case 91:
                             switch (super.read()) {
                                 case 67:
-                                    this.line.moveCursor(1);
+                                    this.line.move(1);
                                     System.out.print(this.line.displayString());
                                     break;
                                 case 68:
-                                    this.line.moveCursor(-1);
+                                    this.line.move(-1);
+                                    System.out.print(this.line.displayString());
+                                    break;
+                                case 72:
+                                    this.line.home();
+                                    System.out.print(this.line.displayString());
+                                    break;
+                                case 70:
+                                    this.line.end();
+                                    System.out.print(this.line.displayString());
+                                    break;
+                                case 50:
+                                    this.line.insert();
                                     System.out.print(this.line.displayString());
                                     break;
                             }
@@ -82,10 +81,10 @@ public class EditableBufferedReader extends BufferedReader {
                     }
                     break;
                 default:
-                    return command;
+                    return tecla;
 
             }
-        }
+        return tecla;
 
     }
 
@@ -93,7 +92,7 @@ public class EditableBufferedReader extends BufferedReader {
     public String readLine() throws IOException {
         setRaw();
         int inChar = 0;
-        while((inChar = read()) != 13){//si es diferent a enter
+        while ((inChar = read()) != Dictionary.ENTER) {//si es diferent a enter
             this.line.addChar((char) inChar);
             System.out.print(this.line.displayString());
             //System.out.println(inChar);
@@ -101,5 +100,4 @@ public class EditableBufferedReader extends BufferedReader {
         unsetRaw();
         return this.line.toString();
     }
-
 }
