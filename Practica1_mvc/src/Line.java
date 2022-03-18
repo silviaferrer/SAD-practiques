@@ -87,7 +87,7 @@ public class Line extends Observable {
         disp.append('\r');
         disp.append(this.stringLine.toString());
         disp.append(" ");
-        disp.append("\033[");//serveix per moure el cursor?
+        disp.append("\033[");
         disp.append(1 + this.stringLine.length());
         disp.append("D");
         return disp.toString();
