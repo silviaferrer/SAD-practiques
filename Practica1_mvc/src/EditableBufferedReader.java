@@ -4,17 +4,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 /**
  *
  * @author meritxellfont
  */
 public class EditableBufferedReader extends BufferedReader {
-
 
     private Line line;
     private Console console;
@@ -62,23 +56,23 @@ public class EditableBufferedReader extends BufferedReader {
                             switch (super.read()) {
                                 case 67:
                                     this.line.move(1);
-                       //             System.out.print(this.line.displayString());
+                                    //System.out.print(this.line.displayString());
                                     break;
                                 case 68:
                                     this.line.move(-1);
-                         //           System.out.print(this.line.displayString());
+                                    //System.out.print(this.line.displayString());
                                     break;
                                 case 72:
                                     this.line.home();
-                           //         System.out.print(this.line.displayString());
+                                    //System.out.print(this.line.displayString());
                                     break;
                                 case 70:
                                     this.line.end();
-                             //       System.out.print(this.line.displayString());
+                                    //System.out.print(this.line.displayString());
                                     break;
                                 case 50:
                                     this.line.insert();
-                               //     System.out.print(this.line.displayString());
+                                    //System.out.print(this.line.displayString());
                                     break;
                             }
                             break;
