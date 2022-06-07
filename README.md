@@ -19,5 +19,5 @@ En aquesta pràctica es proposa la programació d'una aplicació Xat textual amb
 
 El servidor manté un diccionari de parells (nick, socket). A més, la realització es fa amb dues classes propies *MySocket* i *MyServerSocket* i s'utilitza els streams de text corresponents *BufferedReader* i *PrintWriter*.
 
-## Pràctia 3
+## Pràctica 3
 A partir de la pràctica dos es programa una interfície gràfica senzilla per al xat. La implementació es fa amb la biblioteca gràfica **Swing** de Java i segueix el patró MVC.
